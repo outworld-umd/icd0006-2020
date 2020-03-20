@@ -1,0 +1,178 @@
+:root {
+  --yellow: #e7a922;
+  --blue: #006474;
+  --green: #558c48;
+  --darkyellow: #b3882c;
+  --orange: #c15125;
+  --red: #b2382d;
+  --pink: #dfa5a5;
+}
+
+body {
+  font-family: 'Trebuchet MS', sans-serif;
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+#toast{
+  visibility: hidden;
+  width: 200px;
+  padding: 0.5em;
+  background-color: rgba(255,255,255,0.75);
+  border: 1px solid black;
+  border-radius: 10px;
+  position: absolute;
+  top: 240px;
+  right:1em;
+}
+
+#toast.show {
+    visibility: visible;
+    animation: fade 2s linear;
+}
+
+@keyframes fade{
+  0%{
+    opacity:0;
+  }
+  20%{
+    opacity:1;
+  }
+
+  90%{
+    opacity: 1;
+  }
+
+  100%{
+    opacity: 0;
+  }
+}
+
+/* HEADER */
+header {
+  font-family: 'Trebuchet MS', cursive;
+  font-size: 4em;
+  padding-left: 1em;
+  color: black;
+}
+
+header::first-letter{
+  font-weight: 500;
+  color: var(--orange)
+}
+
+.main {
+  margin: 4em 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.display {
+  margin-bottom: 1em;
+  padding: 1em;
+  font-size: 24px;
+  background-color: var(--green);
+  font-weight: bold;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.disabled{
+  background-color: rgb(197, 197, 197);
+  pointer-events: none;
+}
+
+table {
+  border-collapse: collapse;
+  border: 2px solid gray;
+  margin: 1em auto 3em;
+}
+
+th,
+td {
+  font-weight: 100;
+  min-height: 30px;
+  min-width: 30px;
+  border: 2px solid gray;
+}
+
+td{
+  width: 80px;
+  height:80px;
+  margin: 10px;
+}
+
+.js-cell {
+  border: 1px solid gray;
+}
+
+.button {
+  outline: none;
+  background-color: orange; /* error */
+  transform: rotate(45deg) scale(0.3, 0.3);
+  box-shadow: gray 5px 5px;
+}
+
+.p1 {
+  background-color: var(--blue);
+}
+
+.p2 {
+  background-color: var(--red)
+}
+
+.blink {
+  animation: blink 0.5s linear 0s 3;
+}
+
+@keyframes blink {
+  0% {
+    background-color: var(--yellow);
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    background-color: var(--yellow);
+
+    opacity: 0.5;
+
+  }
+}
+
+.select-mode {
+  display: flex;
+  font-size: 16px;
+  margin: 1em auto 3em;
+  width: 25%;
+}
+
+form{
+  position: relative;
+  display: flex;
+  flex-direction: flex-end;
+}
+
+
+.select-mode button{
+  margin-top: 1em;
+  margin-left: 0.5em;
+  outline: none;
+  border: none;
+  background-color: var(--green);
+  font-size: 3em;
+  font-family: 'Trebuchet MS', sans-serif;
+  color: white;
+  border-radius: 50px;
+  padding: 8px 24px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.select-mode button:hover {
+  background-color: darkred;
+}

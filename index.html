@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Hammersmith+One|Monoton&display=swap" rel="stylesheet">
+    <title>Dara</title>
+</head>
+<body>
+<div>
+    <header>
+        DARA
+    </header>
+
+    <div class="display">
+        <div id="phase" hidden="hidden"></div>
+        <div id="turn"></div>
+    </div>
+    <div class="main">
+        <div class="select-mode" style="margin-left: 1em">
+            <ul>
+                <b>Drop phase</b>
+                <p>Players alternate placing their tokens on the game board.
+                    Once all tokens have been placed, the move phase begins.</p>
+
+                <b>Move phase</b>
+
+                <p>Players take turns moving their tokens, one at a time, in an attempt to make 3 in a row. Once a
+                    player has made three in a row, he can remove one of his opponent’s tokens from the board.</p>
+                <b>Constraints</b>
+                <p>
+                <ul style="font-weight: normal">
+                    <li>You may not have more that 3 tokens in a row.</li>
+                    <li>You are not allowed to make 3 in a row during the drop phase.</li>
+                    <li>You may not capture an opponents token when it is part of a 3 in row he made.</li>
+                    <li>Rows of three may only be orthogonally, not diagonally.</li>
+                    <li>No diagonal moves are allowed.</li>
+                </ul>
+                <p/>
+            </ul>
+
+        </div>
+        <div style="width: 50%">
+            <table id="board" class="disabled">
+                <tr>
+                    <td class="js-cell " data-id="0,0"></td>
+                    <td class="js-cell " data-id="1,0"></td>
+                    <td class="js-cell " data-id="2,0"></td>
+                    <td class="js-cell " data-id="3,0"></td>
+                    <td class="js-cell " data-id="4,0"></td>
+                    <td class="js-cell " data-id="5,0"></td>
+                </tr>
+                <tr>
+                    <td class="js-cell " data-id="0,1"></td>
+                    <td class="js-cell " data-id="1,1"></td>
+                    <td class="js-cell " data-id="2,1"></td>
+                    <td class="js-cell " data-id="3,1"></td>
+                    <td class="js-cell " data-id="4,1"></td>
+                    <td class="js-cell " data-id="5,1"></td>
+                </tr>
+                <tr>
+                    <td class="js-cell " data-id="0,2"></td>
+                    <td class="js-cell " data-id="1,2"></td>
+                    <td class="js-cell " data-id="2,2"></td>
+                    <td class="js-cell " data-id="3,2"></td>
+                    <td class="js-cell " data-id="4,2"></td>
+                    <td class="js-cell " data-id="5,2"></td>
+                </tr>
+                <tr>
+                    <td class="js-cell " data-id="0,3"></td>
+                    <td class="js-cell " data-id="1,3"></td>
+                    <td class="js-cell " data-id="2,3"></td>
+                    <td class="js-cell " data-id="3,3"></td>
+                    <td class="js-cell " data-id="4,3"></td>
+                    <td class="js-cell " data-id="5,3"></td>
+                </tr>
+                <tr>
+                    <td class="js-cell " data-id="0,4"></td>
+                    <td class="js-cell " data-id="1,4"></td>
+                    <td class="js-cell " data-id="2,4"></td>
+                    <td class="js-cell " data-id="3,4"></td>
+                    <td class="js-cell " data-id="4,4"></td>
+                    <td class="js-cell " data-id="5,4"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="select-mode">
+            <form id="modeForm">
+                <div>
+                    <input type="radio" id="mode1" name="mode" value="mode1" checked/>
+                    <label for="mode1">Human vs Human</label><br/>
+                    <input type="radio" id="mode2" name="mode" value="mode2"/>
+                    <label for="mode2">Human vs AI (Human starts)</label><br/>
+                    <input type="radio" id="mode4" name="mode" value="mode4"/>
+                    <label for="mode4">Human vs AI (AI starts)</label><br/>
+                    <input type="radio" id="mode3" name="mode" value="mode3"/>
+                    <label for="mode3">AI vs AI</label><br/>
+                    <button id="start" type="submit">Start</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+</body>
+<script src="js/game.js"></script>
+<script type="module" src="js/app.js"></script>
+</html>
