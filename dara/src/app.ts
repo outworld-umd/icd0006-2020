@@ -1,8 +1,6 @@
 import './game.js'
 import Timeout = NodeJS.Timeout;
 
-console.log("KAVER GEI")
-
 const cells = document.querySelectorAll(".js-cell");
 // addEventListener to retrieve clicked cell
 for (let i = 0; i < cells.length; i++) {

@@ -4,7 +4,7 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        main: './wwwroot/js/app.ts'
+        main: './wwwroot/js/app.js'
     },
     output: {
         filename: '[name].js',
@@ -28,4 +28,4 @@ module.exports = {
             path.join(__dirname, 'wwwroot')
         ]
     }
-}
+};

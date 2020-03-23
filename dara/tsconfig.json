@@ -19,7 +19,7 @@
     ]
   },
   "include": [
-    "global.d.ts", "./wwwroot/**/*"
+    "global.d.ts", "./src/**/*"
   ],
   "exclude": [
     "node_modules"
