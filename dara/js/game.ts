@@ -1,5 +1,12 @@
-const gamePhase = {DROP: 1, SELECT: 2, MOVE: 3, REMOVE: 4, FINISH: 5};
-let gameState = {board: [], currentPlayer: 1, counter: 1, selectCell: undefined, phase: undefined};
+enum Phases {DROP=1, SELECT, MOVE, REMOVE, FINISH}
+interface Game {
+    board: number[][],
+    currentPlayer: number,
+    counter: number,
+    selectCell: number[] | undefined,
+    phase: Phases | undefined
+}
+let gameState: Game = {board: [], currentPlayer: 1, counter: 1, selectCell: undefined, phase: undefined};
 
 // initialize board
 function initialize() {
@@ -10,10 +17,10 @@ function initialize() {
     gameState.currentPlayer = 1;
     gameState.counter = 1;
     gameState.selectCell = undefined;
-    gameState.phase = gamePhase.DROP;
+    gameState.phase = Phases.DROP;
 }
 
-function isThree(x, y, exclude = undefined) {
+function isThree(x: number, y: number, exclude: number[] | undefined = undefined) {
     let board = JSON.parse(JSON.stringify(gameState.board));
     if (exclude) board[exclude[0]][exclude[1]] = 0;
     let counterX = 0;
@@ -59,7 +66,7 @@ function isThree(x, y, exclude = undefined) {
     return 0;
 }
 
-function getRandomInt(min, max) {
+function getRandomInt(min: number, max: number) {
     return Math.floor(Math.random() * max + min);
 }
 
@@ -100,7 +107,7 @@ function findFirstBestCase() {
     return {bestMove: bestMoves[randomIndex], bestCell: bestCells[randomIndex]};
 }
 
-function getCellsWhichBelongTo(player) {
+function getCellsWhichBelongTo(player: number) {
     let arr = [];
     for (let x = 0; x < 6; ++x) {
         for (let y = 0; y < 5; ++y) {
@@ -110,23 +117,23 @@ function getCellsWhichBelongTo(player) {
     return arr;
 }
 
-function getRandomCellWhichBelongsTo(player) {
+function getRandomCellWhichBelongsTo(player: number) {
     const cells = getCellsWhichBelongTo(player);
     return cells[getRandomInt(0, cells.length - 1)];
 }
 
 // computer vs computer
 function stepAI() {
-    if (gameState.phase === gamePhase.DROP) {
+    if (gameState.phase === Phases.DROP) {
         findCellToDrop();
         gameState.currentPlayer = (gameState.currentPlayer === 2) ? 1 : 2;
-        if (getCellsWhichBelongTo(gameState.currentPlayer).length === 12) gameState.phase = gamePhase.SELECT;
-    } else if (gameState.phase === gamePhase.SELECT) {
+        if (getCellsWhichBelongTo(gameState.currentPlayer).length === 12) gameState.phase = Phases.SELECT;
+    } else if (gameState.phase === Phases.SELECT) {
         let moveData = findFirstBestCase();
         gameState.selectCell = [moveData.bestCell.x, moveData.bestCell.y];
-        gameState.phase = gamePhase.MOVE;
+        gameState.phase = Phases.MOVE;
         gameLogic([moveData.bestMove.x, moveData.bestMove.y]);
-    } else if (gameState.phase === gamePhase.REMOVE) {
+    } else if (gameState.phase === Phases.REMOVE) {
         const randomCell = getRandomCellWhichBelongsTo(gameState.currentPlayer === 1 ? 2 : 1);
         if (!randomCell) return;
         gameLogic([randomCell.x, randomCell.y]);
@@ -138,24 +145,24 @@ function endDrop() {
 }
 
 // human vs computer
-function stepHumanAI(player) {
+function stepHumanAI(player: number) {
     if (gameState.currentPlayer === player) return;
-    if (gameState.phase === gamePhase.DROP && !endDrop()) {
+    if (gameState.phase === Phases.DROP && !endDrop()) {
         findCellToDrop();
         gameState.currentPlayer = player;
         if (endDrop()) {
-            gameState.phase = gamePhase.SELECT;
+            gameState.phase = Phases.SELECT;
             return;
         }
     }
-    if (endDrop() && gameState.phase === gamePhase.DROP) gameState.phase = gamePhase.SELECT;
-    if (gameState.phase === gamePhase.SELECT) {
+    if (endDrop() && gameState.phase === Phases.DROP) gameState.phase = Phases.SELECT;
+    if (gameState.phase === Phases.SELECT) {
         let moveData = findFirstBestCase();
         gameState.selectCell = [moveData.bestCell.x, moveData.bestCell.y];
-        gameState.phase = gamePhase.MOVE;
+        gameState.phase = Phases.MOVE;
         gameLogic([moveData.bestMove.x, moveData.bestMove.y]);
     }
-    if (gameState.phase === gamePhase.REMOVE) {
+    if (gameState.phase === Phases.REMOVE) {
         const randomCell = getRandomCellWhichBelongsTo(gameState.currentPlayer === 1 ? 2 : 1);
         if (!randomCell) return;
         gameLogic([randomCell.x, randomCell.y]);
@@ -163,51 +170,53 @@ function stepHumanAI(player) {
 }
 
 // main game logic
-function gameLogic(clicked) {
-    if (gameState.phase === gamePhase.DROP) {
+function gameLogic(clicked: number[]) {
+    if (gameState.phase === Phases.DROP) {
         const dropCell = {x: clicked[0], y: clicked[1]};
         if (!drop(dropCell.x, dropCell.y)) return false;
         gameState.currentPlayer = (gameState.currentPlayer === 2) ? 1 : 2;
-        if (gameState.counter === 24) gameState.phase = gamePhase.SELECT;
+        if (gameState.counter === 24) gameState.phase = Phases.SELECT;
         gameState.counter += 1;
-    } else if (gameState.phase === gamePhase.SELECT) {
+    } else if (gameState.phase === Phases.SELECT) {
         const selectCell = {x: clicked[0], y: clicked[1]};
         if (gameState.board[selectCell.x][selectCell.y] === gameState.currentPlayer) {
             gameState.selectCell = clicked;
-            gameState.phase = gamePhase.MOVE;
+            gameState.phase = Phases.MOVE;
             return {highlightCells: findPossibleMoves(selectCell.x, selectCell.y, gameState.selectCell)};
         }
-    } else if (gameState.phase === gamePhase.MOVE) {
+    } else if (gameState.phase === Phases.MOVE) {
         const selectCell = {x: clicked[0], y: clicked[1]};
         if (gameState.board[selectCell.x][selectCell.y] === gameState.currentPlayer) {
             gameState.selectCell = clicked;
             return {highlightCells: findPossibleMoves(selectCell.x, selectCell.y, gameState.selectCell)};
         }
         const moveCell = {x: clicked[0], y: clicked[1]};
-        const possibleMove = findPossibleMoves(gameState.selectCell[0], gameState.selectCell[1], gameState.selectCell)
-            .find(m => m.x === moveCell.x && m.y === moveCell.y);
-        if (!possibleMove) return false;
-        if (isThree(moveCell.x, moveCell.y, gameState.selectCell) === -1) return false;
-        move(gameState.selectCell[0], gameState.selectCell[1], moveCell.x, moveCell.y);
-        if (isThree(moveCell.x, moveCell.y) === 1) gameState.phase = gamePhase.REMOVE;
-        else {
-            gameState.currentPlayer = (gameState.currentPlayer === 2) ? 1 : 2;
-            gameState.phase = gamePhase.SELECT;
+        if (gameState.selectCell) {
+            const possibleMove = findPossibleMoves(gameState.selectCell[0], gameState.selectCell[1], gameState.selectCell)
+                .filter(m => m.x === moveCell.x && m.y === moveCell.y)[0];
+            if (!possibleMove) return false;
+            if (isThree(moveCell.x, moveCell.y, gameState.selectCell) === -1) return false;
+            move(gameState.selectCell[0], gameState.selectCell[1], moveCell.x, moveCell.y);
+            if (isThree(moveCell.x, moveCell.y) === 1) gameState.phase = Phases.REMOVE;
+            else {
+                gameState.currentPlayer = (gameState.currentPlayer === 2) ? 1 : 2;
+                gameState.phase = Phases.SELECT;
+            }
+            gameState.selectCell = undefined;
         }
-        gameState.selectCell = undefined;
-    } else if (gameState.phase === gamePhase.REMOVE) {
+    } else if (gameState.phase === Phases.REMOVE) {
         const removeCell = {x: clicked[0], y: clicked[1]};
         if (!remove(removeCell.x, removeCell.y)) return false;
         remove(removeCell.x, removeCell.y);
         let count = getCellsWhichBelongTo(gameState.currentPlayer === 1 ? 2 : 1).length;
-        gameState.phase = count < 3 ? gamePhase.FINISH : gamePhase.SELECT;
-        if (gameState.phase !== gamePhase.FINISH) gameState.currentPlayer = (gameState.currentPlayer === 2) ? 1 : 2;
+        gameState.phase = count < 3 ? Phases.FINISH : Phases.SELECT;
+        if (gameState.phase !== Phases.FINISH) gameState.currentPlayer = (gameState.currentPlayer === 2) ? 1 : 2;
         else console.log(`Player ${gameState.currentPlayer} won`);
     }
 }
 
 // drop point
-function drop(x, y) {
+function drop(x: number, y: number) {
     if (gameState.board[x][y] !== 0 || isThree(x, y) !== 0) {
         return false;
     }
@@ -216,7 +225,7 @@ function drop(x, y) {
 }
 
 // find legal moves
-function findPossibleMoves(x, y, exclude = undefined) {
+function findPossibleMoves(x: number, y: number, exclude: number[] | undefined = undefined) {
     return [{x: x, y: y - 1}, {x: x, y: y + 1}, {x: x - 1, y: y}, {x: x + 1, y: y}]
         .filter(n => -1 < n.x && n.x < 6 && -1 < n.y && n.y < 5 && gameState.board[n.x][n.y] === 0
             && isThree(n.x, n.y, exclude) > -1);
@@ -224,7 +233,7 @@ function findPossibleMoves(x, y, exclude = undefined) {
 }
 
 // move point from a to b
-function move(fromX, fromY, toX, toY) {
+function move(fromX: number, fromY: number, toX: number, toY: number) {
     if (gameState.board[toX][toY] !== 0) return false;
     gameState.board[toX][toY] = gameState.currentPlayer;
     gameState.board[fromX][fromY] = 0;
@@ -232,7 +241,7 @@ function move(fromX, fromY, toX, toY) {
 }
 
 // remove point from board
-function remove(x, y) {
+function remove(x: number, y: number) {
     if (gameState.board[x][y] === 0 || gameState.board[x][y] === gameState.currentPlayer) return false;
     gameState.currentPlayer = gameState.currentPlayer === 2 ? 1 : 2;
     let res = isThree(x, y) === 1;
