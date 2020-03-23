@@ -1,3 +1,5 @@
+console.log("KAVER GEI")
+
 enum Phases {DROP=1, SELECT, MOVE, REMOVE, FINISH}
 interface Game {
     board: number[][],
