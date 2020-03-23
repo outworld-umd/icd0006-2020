@@ -1,0 +1,4 @@
+/*/node_modules/
+.idea/
+/dara/wwwroot/js/*.js
+/dara/wwwroot/js/*.js.map
